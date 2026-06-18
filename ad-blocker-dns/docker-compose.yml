@@ -1,0 +1,25 @@
+services:
+  dns:
+    build: .
+    command: python3 dns_server.py
+    network_mode: host
+    volumes:
+      - ./blocked.log:/app/blocked.log
+      - ./adservers.txt:/app/adservers.txt
+      - ../tunel-dns:/app/tunel-dns
+
+  doh:
+    build: .
+    command: python3 -m uvicorn doh_server:app --host 0.0.0.0 --port 8080
+    network_mode: host
+    depends_on:
+      - dns
+
+  nginx:
+    image: nginx:alpine
+    network_mode: host
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - doh

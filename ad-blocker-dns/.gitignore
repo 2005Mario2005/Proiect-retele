@@ -1,0 +1,13 @@
+# python
+__pycache__/
+*.pyc
+venv/
+
+# certificates (nu le bagi in git niciodata)
+/etc/letsencrypt/
+*.pem
+*.key
+*.crt
+
+# env files
+.env
